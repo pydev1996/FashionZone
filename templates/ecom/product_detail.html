@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} - Product Details</title>
+    <style>
+        /* General Body Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Header Styles */
+header {
+    background-color: #3b5998;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header .logo h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+/* Product Detail Container */
+.product-detail-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Product Image */
+.product-image img {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+/* Product Information */
+.product-info {
+    font-size: 16px;
+    color: #555;
+}
+
+.product-info strong {
+    color: #333;
+    font-weight: bold;
+}
+
+.product-info p {
+    margin: 10px 0;
+}
+
+/* Reviews Section */
+.reviews-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.reviews-section h2 {
+    color: #333;
+}
+
+.reviews-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.reviews-section li {
+    background-color: #fafafa;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.reviews-section li strong {
+    color: #3b5998;
+}
+
+.reviews-section li small {
+    color: #888;
+}
+
+/* Add Review Section */
+.add-review {
+    margin-top: 40px;
+}
+
+.add-review h3 {
+    font-size: 20px;
+    color: #333;
+}
+
+.add-review form {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-review form button {
+    background-color: #3b5998;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.add-review form button:hover {
+    background-color: #2d4373;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    margin-top: 40px;
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+    </style>
+    
+</head>
+<body>
+    <div class="product-detail-container">
+        <h1>{{ product.name }}</h1>
+        
+        <div class="product-image">
+            {% if product.product_image %}
+                <img src="{% static product.product_image.url %}" alt="{{ product.name }}">
+            {% else %}
+                <img src="{% static 'images/default-product.jpg' %}" alt="Default image">
+            {% endif %}
+        </div>
+        
+        <div class="product-info">
+            <p><strong>Description:</strong> {{ product.description }}</p>
+            <p><strong>Price:</strong> ${{ product.price }}</p>
+        </div>
+        
+        <div class="reviews-section">
+            <h2>Reviews</h2>
+            {% if reviews %}
+                <ul>
+                    {% for review in reviews %}
+                        <li>
+                            <strong>{{ review.user.username }} ({{ review.rating }} stars)</strong>
+                            <p>{{ review.comment }}</p>
+                            <small>Reviewed on: {{ review.created_at|date:"F j, Y" }}</small>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No reviews yet. Be the first to review!</p>
+            {% endif %}
+        </div>
+
+        <div class="add-review">
+            <h3>Submit a Review</h3>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Submit Review</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Your E-Commerce Site</p>
+    </footer>
+</body>
+</html>
