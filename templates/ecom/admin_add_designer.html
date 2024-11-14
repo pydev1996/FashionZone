@@ -1,0 +1,33 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        <h1>Add New Designer</h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <h3>Designer Information</h3>
+            <div class="form-group">
+                <label for="id_name">Name</label>
+                {{ designer_form.name }}
+            </div>
+            <div class="form-group">
+                <label for="id_contact">Contact</label>
+                {{ designer_form.contact }}
+            </div>
+            <div class="form-group">
+                <label for="id_address">Address</label>
+                {{ designer_form.address }}
+            </div>
+
+            <h3>Designer Images</h3>
+            <div class="form-group">
+                <label for="id_image">Profile Pictures</label>
+                {{ image_form.image }}  <!-- Multiple file upload -->
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Designer</button>
+        </form>
+    </div>
+{% endblock content %}

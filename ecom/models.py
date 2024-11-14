@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-# Create your models here.
+
 class Customer(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     profile_pic= models.ImageField(upload_to='profile_pic/CustomerProfilePic/',null=True,blank=True)
@@ -79,3 +79,23 @@ class Feedback(models.Model):
     date= models.DateField(auto_now_add=True,null=True)
     def __str__(self):
         return self.name
+from django.db import models
+
+from django.db import models
+
+class Designer(models.Model):
+    name = models.CharField(max_length=100)
+    contact = models.CharField(max_length=20)
+    address = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class DesignerImage(models.Model):
+    designer = models.ForeignKey(Designer, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='designer_images/')
+
+    def __str__(self):
+        return f"Image for {self.designer.name}"
+

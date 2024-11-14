@@ -159,7 +159,82 @@ def update_product_view(request,pk):
             productForm.save()
             return redirect('admin-products')
     return render(request,'ecom/admin_update_product.html',{'productForm':productForm})
+# views.py
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from .forms import DesignerForm, DesignerImageForm
+from .models import Designer, DesignerImage
 
+@login_required(login_url='adminlogin')
+def admin_add_designer_view(request):
+    if request.method == 'POST':
+        designer_form = DesignerForm(request.POST)
+        image_form = DesignerImageForm(request.POST, request.FILES)
+
+        if designer_form.is_valid() and image_form.is_valid():
+            # Save the designer instance
+            designer = designer_form.save()
+
+            # Handle multiple image uploads
+            images = request.FILES.getlist('image')  # Get the list of images uploaded
+            for img in images:
+                designer_image = DesignerImage(designer=designer, image=img)
+                designer_image.save()
+
+            return HttpResponseRedirect('/admin/designers/')  # Redirect to the list of designers
+
+    else:
+        designer_form = DesignerForm()
+        image_form = DesignerImageForm()
+
+    return render(request, 'ecom/admin_add_designer.html', {
+        'designer_form': designer_form,
+        'image_form': image_form
+    })
+
+@login_required(login_url='adminlogin')
+def admin_designer_list(request):
+    designers = Designer.objects.all()  # Get all designers
+    return render(request, 'ecom/admin_designer_list.html', {'designers': designers})
+
+@login_required(login_url='adminlogin')
+def admin_edit_designer(request, pk):
+    designer = get_object_or_404(Designer, pk=pk)
+    
+    if request.method == 'POST':
+        designer_form = DesignerForm(request.POST, instance=designer)
+        image_form = DesignerImageForm(request.POST, request.FILES)
+        
+        if designer_form.is_valid() and image_form.is_valid():
+            designer_form.save()
+            
+            # Handle multiple image uploads
+            images = request.FILES.getlist('image')
+            for img in images:
+                designer_image = DesignerImage(designer=designer, image=img)
+                designer_image.save()
+            
+            return redirect('admin_designer_list')  # Redirect to designer list page
+    else:
+        designer_form = DesignerForm(instance=designer)
+        image_form = DesignerImageForm()
+
+    return render(request, 'ecom/admin_edit_designer.html', {
+        'designer_form': designer_form,
+        'image_form': image_form,
+        'designer': designer,
+    })
+
+@login_required(login_url='adminlogin')
+def admin_delete_designer(request, pk):
+    designer = get_object_or_404(Designer, pk=pk)
+    
+    # Optionally delete all related images
+    designer.images.all().delete()
+    designer.delete()
+    
+    return redirect('admin_designer_list')  # Redirect to designer list page
 
 @login_required(login_url='adminlogin')
 def admin_view_booking_view(request):
@@ -605,3 +680,21 @@ def contactus_view(request):
             send_mail(str(name)+' || '+str(email),message, settings.EMAIL_HOST_USER, settings.EMAIL_RECEIVING_USER, fail_silently = False)
             return render(request, 'ecom/contactussuccess.html')
     return render(request, 'ecom/contactus.html', {'form':sub})
+
+
+
+#----------------------------------Designers-------------------------------------#
+from django.shortcuts import render, get_object_or_404
+from .models import Designer
+
+def designer_list(request):
+    designers = Designer.objects.all()
+    return render(request, 'ecom/designer_list.html', {'designers': designers})
+
+def designer_detail(request, pk):
+    designer = get_object_or_404(Designer, pk=pk)
+    images = designer.images.all()  # Retrieve all images for the designer
+    for image in images:
+        print(image.image)
+    return render(request, 'ecom/designer_detail.html', {'designer': designer, 'images': images})
+

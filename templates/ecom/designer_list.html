@@ -1,0 +1,105 @@
+{% extends 'ecom/customer_base.html' %}
+{% load static %}
+{% block content %}
+<style media="screen">
+    body,
+    html {
+        height: 100%;
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background-color: #f7f7f7;
+    }
+
+    .designer-list-container {
+        margin: 40px auto;
+        max-width: 1200px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        font-size: 2.5em;
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .designer-list-container ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .designer-list-container li {
+        background-color: #fff;
+        border: 1px solid #e1e1e1;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .designer-list-container li:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .designer-list-container a {
+        display: block;
+        padding: 20px;
+        font-size: 1.2em;
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+        text-align: center;
+        background-color: #f8f8f8;
+        border-bottom: 1px solid #e1e1e1;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .designer-list-container a:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .empty-message {
+        font-size: 1.2em;
+        color: #888;
+        text-align: center;
+        padding: 20px;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .designer-list-container {
+            padding: 15px;
+        }
+
+        h1 {
+            font-size: 2em;
+        }
+
+        a {
+            font-size: 1.1em;
+        }
+    }
+</style>
+
+<div class="designer-list-container">
+    <h1>Designers</h1>
+    <ul>
+        {% for designer in designers %}
+            <li>
+                <a href="{% url 'designer_detail' designer.pk %}">{{ designer.name }}</a>
+            </li>
+        {% empty %}
+            <li class="empty-message">No designers available.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock content %}

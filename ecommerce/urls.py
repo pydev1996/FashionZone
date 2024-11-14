@@ -49,12 +49,17 @@ urlpatterns = [
     path('edit-profile', views.edit_profile_view,name='edit-profile'),
     path('download-invoice/<int:orderID>/<int:productID>', views.download_invoice_view,name='download-invoice'),
 
+    path('designers/', views.designer_list, name='designer_list'),
+    path('designers/<int:pk>/', views.designer_detail, name='designer_detail'),
 
     path('add-to-cart/<int:pk>', views.add_to_cart_view,name='add-to-cart'),
     path('cart', views.cart_view,name='cart'),
     path('remove-from-cart/<int:pk>', views.remove_from_cart_view,name='remove-from-cart'),
     path('customer-address', views.customer_address_view,name='customer-address'),
     path('payment-success', views.payment_success_view,name='payment-success'),
-
+    path('admin/add-designer/', views.admin_add_designer_view, name='admin_add_designer'),
+    path('admin/designers/', views.admin_designer_list, name='admin_designer_list'),
+    path('admin/edit-designer/<int:pk>/', views.admin_edit_designer, name='admin_edit_designer'),
+    path('admin/delete-designer/<int:pk>/', views.admin_delete_designer, name='admin_delete_designer'),
 
 ]

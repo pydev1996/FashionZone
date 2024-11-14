@@ -55,3 +55,21 @@ class ReviewForm(forms.ModelForm):
             'rating': forms.RadioSelect(),
             'comment': forms.Textarea(attrs={'rows': 3}),
         }
+
+
+
+from django import forms
+from .models import Designer, DesignerImage
+
+class DesignerForm(forms.ModelForm):
+    class Meta:
+        model = Designer
+        fields = ['name', 'contact', 'address']
+
+class DesignerImageForm(forms.ModelForm):
+    class Meta:
+        model = DesignerImage
+        fields = ['image']
+
+    image = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))  # Allow multiple files
+
